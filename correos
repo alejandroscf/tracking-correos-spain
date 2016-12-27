@@ -16,7 +16,7 @@ cat $web | iconv --from-code=ISO-8859-1 --to-code=UTF-8 > $tempfile
 cat $tempfile |sed 's/\r//g' > $tempfile1
 
 IFS=$'\n'
-fechas=( `cat $tempfile1 |egrep -o '[0-3][0-9]/[0-1][0-9]/[[:digit:]][[:digit:]][[:digit:]][[:digit:]]'`
+fechas=( `cat $tempfile1 |egrep -o '[0-3][0-9]/[0-1][0-9]/[[:digit:]][[:digit:]][[:digit:]][[:digit:]]<'|sed 's/<//'`
 )
 estados=( `cat $tempfile1 |egrep -o 'txtNormal[^>]*>[^ ]*[ ][^<]*' | sed 's/.*> //'|grep -v style` )
 for (( i = 0 ; i < ${#fechas[@]} ; i++ ));do
