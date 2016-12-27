@@ -3,14 +3,14 @@ if [ $# -lt 1 ];then
  echo "Usage: `basename $0` tracking_number"
  exit 1
 fi
-correoses="193.148.147.70"
+correoses="aplicacionesweb.correos.es"
 numero=$1
 tempdir="/tmp"
 web="$tempdir/$RANDOM"
 tempfile="$tempdir/$RANDOM"
 tempfile1="$tempdir/$RANDOM"
 
-wget -t 3 -T 5 "http://${correoses}/comun/localizador/track.asp?numero=$numero" -O "$web" >& /dev/null
+wget -t 3 -T 5 "http://${correoses}/localizadorenvios/track.asp?accion=LocalizaUno&numero=$numero" -O "$web" >& /dev/null
 
 cat $web | iconv --from-code=ISO-8859-1 --to-code=UTF-8 > $tempfile
 cat $tempfile |sed 's/\r//g' > $tempfile1
