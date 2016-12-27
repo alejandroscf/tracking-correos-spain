@@ -1,0 +1,27 @@
+#!/bin/bash
+if [ $# -lt 1 ];then
+ echo "Usage: `basename $0` tracking_number"
+ exit 1
+fi
+correoses="193.148.147.70"
+numero=$1
+tempdir="/tmp"
+web="$tempdir/$RANDOM"
+tempfile="$tempdir/$RANDOM"
+tempfile1="$tempdir/$RANDOM"
+
+wget -t 3 -T 5 "http://${correoses}/comun/localizador/track.asp?numero=$numero" -O "$web" >& /dev/null
+
+cat $web | iconv --from-code=ISO-8859-1 --to-code=UTF-8 > $tempfile
+cat $tempfile |sed 's/\r//g' > $tempfile1
+
+IFS=$'\n'
+fechas=( `cat $tempfile1 |egrep -o '[0-3][0-9]/[0-1][0-9]/[[:digit:]][[:digit:]][[:digit:]][[:digit:]]'`
+)
+estados=( `cat $tempfile1 |egrep -o 'txtNormal[^>]*>[^ ]*[ ][^<]*' | sed 's/.*> //'|grep -v style` )
+for (( i = 0 ; i < ${#fechas[@]} ; i++ ));do
+ echo "${fechas[${i}]} ${estados[${i}]}"
+done
+
+rm -f $web $tempfile $tempfile1
+exit $?
